@@ -1,0 +1,159 @@
+# Parameters to setup models and experiments
+wandb:
+  # project name
+  project: InDoorSeg
+  # model name
+  name: dining
+  # longer description for the experiment
+  notes: Model training for indoor scene dataset
+
+pbar:
+  progress_refresh_rate: 10
+
+experiment:
+  # Seed for random number generators
+  randomseed: 233
+  # Device to take experiment
+  device: cuda
+  # directory to save log and checkpoint
+  logdir: datasets/InDoorSeg/logs
+  # learning rate for grid optimization
+  lr_grid: 0.02
+  # learning rate for vel optimization
+  lr_vel: 1.0E-3
+  # learning rate for grid optimization
+  lr_net: 1.0E-3
+  # for how many iterations we decay the learning rate
+  lr_decay_iters: -1
+  # at the final lr_decay_iters, we want to decay the lr to what level
+  lr_decay_target_ratio: 0.1
+  # reset the lr scale factor when upsample
+  lr_upsample_reset: 1
+  # gradually increase the time
+  gradual_iters: -1
+  # switch the sampling method to a batchified rays
+  switch_iters: -1 # 19000
+  # training iterations
+  train_iters: 30000 # 50000 # 30000 # 60000 # 30000
+  # freeze the training of velocity field for several epochs
+  freeze_vel_iters: 0
+  # print loss and psnr every print_every epochs
+  print_every: 500
+  # validate_every
+  validate_every: 10000
+  # save the checkpoint every
+  save_every: 5000
+  # weight for different loss regulizations
+  Ortho_weight: 0.0
+  L1_weight_inital: 8.0E-4
+  L1_weight_reset: 4.0E-4
+  TV_weight_density: 1.0
+  TV_weight_app: 1.0
+  TV_vel_reg_weight: 1.0
+  vel_reg_weight: 1
+  vel_reg_n_pts: 131072
+
+dataset:
+  type: blender
+  # base directory of dataset
+  basedir: datasets/InDoorSeg/data/dining_wall_final
+  # for the blender datasets, optionally return images at half the original resolution of 800 x 800
+  half_res: False
+  # Stride
+  test_skip: 1
+  # near clip plane (clip all depth values closer than this threshold)
+  near: 1.
+  # far clip plane (clip all depth values farther than this threshold)
+  far: 8.
+  # True for white background
+  white_background: False
+
+renderer:
+  # the number of rays to sample
+  n_rays: 2048
+  # batch size for point batchify at training stage
+  batch_size: 131072
+  # batch size for point batchify at testing stage
+  test_batch_size: 640000 # 1280000 # 640000 # 2560000
+  # distance scale factor in tensorf
+  distance_scale: 25
+  # sampling points by tensorf
+  tensorf_sample: True
+  ndc: False
+
+nvfi:
+  # bounding box of the whole scene
+  bbox_x: [-3.03, 3.03]
+  bbox_y: [-3.03, 3.03]
+  bbox_z: [-0.03, 6.03]
+  # resolution for reference state grid
+  state_res: 64
+  # what kind of tensoRF are using
+  model_name: TensorVMKeyframeTimeKplane
+  # voxel numbers at the initial time
+  N_voxel_init: 262144
+  # final voxel numbers
+  N_voxel_final: 8000000
+  # at which iteration to upsample the voxel resolution for tensorf
+  upsamp_list: [2000,4000,6000,8000,10000]
+  # at which iteration to shrink the aabb for tensorf
+  update_AlphaMask_list: []
+  # surround box of the whole scene
+  sur_x: [-2.5, 2.5]
+  sur_y: [-2.5, 2.5]
+  sur_z: [0.64, 5.95]
+  # the number of components for density tensorrf
+  density_n_comp: [24, 24, 24]
+  # the number of components for appearance tensorrf
+  appearance_n_comp: [48, 48, 48]
+  # dimension for appearance hidden feature
+  app_dim: 32 # 15 # 27
+  # the density method, e.g. Density, DensityLinear, DensityFourier
+  densityMode: Density
+  # the shader method, e.g. mlp or sh
+  shadingMode: MLP_PE
+  # the threshold for tensorf to construct alphamask
+  alphaMask_thres: 0.0001 # 0.001 # 0.0001
+  # the threshold for tensorf to skip weight
+  rayMarch_weight_thres: 0.0001
+  # density shift in tensorf
+  density_shift: -5 # -5.0 # -10
+  # distance scale factor in tensorf
+  distance_scale: 10 # 10.0 # 25
+  # positional encoding dimension
+  pos_pe: 6
+  # viewing direction encoding dimension
+  view_pe: 6
+  # feature encoding dimension
+  fea_pe: 6
+  # hidden feature size in decoder mlp
+  featureC: 128
+  # step ratio for tensorf ray casting, not used
+  step_ratio: 0.5
+  # activation function for density
+  fea2denseAct: softplus
+  # maximum number of samples per ray
+  max_n_samples: 1024 # 400 # 512 # 1024
+  # number of key frames
+  num_keyframes: 4
+  # number of key frames in the end
+  num_keyframes_end: 4
+  # the time dimension is assumed to be within [0, tmax]
+  tmax: 0.75 # 1 # 0.75 # 0.73
+  dt: 0.02
+  # whether to use mlp velocity field
+  use_vel: True
+
+segmentation:
+  # the number of maximum number of objects
+  n_object: 8
+  n_iters: 1000
+  smooth_iter: 500
+  lrate: 0.005
+  lrate_decay: 1.0  # 0.1
+  lrate_decay_step: 1000
+  save_freq: 100
+  loss_smooth_w: 0.1
+  alpha_scale: 10
+  n_sample_res: 64
+  min_t: 0.5

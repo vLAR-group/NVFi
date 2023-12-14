@@ -1,0 +1,9 @@
+lpips
+einops==0.7.0
+tqdm
+scipy
+imageio==2.31.6
+opencv-python
+open3d
+Pillow==10.0.1
+wandb
