@@ -143,7 +143,7 @@ def main(config_args):
 
         with torch.cuda.amp.autocast(enabled=train_fp16):
 
-            if not config_args.static and not config_args.keyframe:
+            if not config_args.static:
                 
                 # rgb loss for random time t
                 all_idx = counts['train']
@@ -206,7 +206,7 @@ def main(config_args):
                 rgb_loss0 = torch.zeros(1,1)
 
             # regularization
-            if config_args.static or config_args.static_dynamic or config_args.keyframe:
+            if config_args.static or config_args.static_dynamic:
                 if L1_reg_weight > 0:
                     L1_reg_weight *= lr_factor
                     loss_reg_L1 = nvfi.nvfi.density_L1()
