@@ -1,5 +1,6 @@
 # NVFi: Neural Velocity Fields for 3D Physics Learning from Dynamic Videos (NeurIPS 2023)
 
+[![License: CC-BY-NC-SA](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-green)](./LICENSE)
 [![arXiv](https://img.shields.io/badge/arXiv-2312.06398-b31b1b)](https://arxiv.org/abs/2312.06398)
 
 ![image](images/overview.jpg)
